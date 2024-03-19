@@ -1,35 +1,35 @@
 const router = require("express").Router();
 let Course = require("../models/Course.js");
 
-router.route("/add").post((req, res) => {
+router.route("/add").post(async (req, res) => {
     const crscode = req.body.crscode;
     const crsname = req.body.crsname;
     const description = req.body.description;
     const credit = Number(req.body.credit);
 
-    const courseItem = new Course({
-        crscode,
-        crsname,
-        description,
-        credit,
-    })
+    try {
+        // Check if a course with the same crscode already exists
+        const existingCourse = await Course.findOne({ crscode });
 
-    courseItem.save().then(() => {
-        res.json({status: "Course successfully added!"});
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).send({status: "Error with adding course"});
-    });
-})
+        if (existingCourse) {
+            return res.status(400).json({ error: "Course with the same crscode already exists" });
+        }
 
-router.route("/").get((req, res) => {
-    Course.find().then((courseItems)=>{
-        res.json(courseItems);
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).send({status: `Cannot fetch course details at the moment. Err: ${err}`});
-    })
-})
+        // If the course does not exist, create and save the new course
+        const courseItem = new Course({
+            crscode,
+            crsname,
+            description,
+            credit,
+        });
+
+        await courseItem.save();
+        return res.json({ status: "Course successfully added!" });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ status: "Error with adding course" });
+    }
+});
 
 router.route("/update/:crscode").put(async (req, res) => {
     const crscode = req.params.crscode;
