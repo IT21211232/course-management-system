@@ -54,5 +54,23 @@ router.route("/update/:crscode").put(async (req, res) => {
     }
 });
 
+router.route("/delete/:crscode").delete(async (req, res) => {
+    const crscode = req.params.crscode;
+
+    try {
+        // Find the menu item by name and delete it
+        const deletedItem = await Course.findOneAndDelete({ crscode: crscode });
+
+        if (deletedItem) {
+            return res.status(200).json({ status: "Item deleted", deletedItem });
+        } else {
+            return res.status(404).json({ error: "Course with the entered ID not found" });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 module.exports = router;
 
