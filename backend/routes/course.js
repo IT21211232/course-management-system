@@ -54,6 +54,15 @@ router.route("/update/:crscode").put(async (req, res) => {
     }
 });
 
+router.route("/").get((req, res) => {
+    Course.find().then((courseItems)=>{
+        res.json(courseItems);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send({status: `Cannot fetch course details at the moment. Err: ${err}`});
+    })
+})
+
 router.route("/delete/:crscode").delete(async (req, res) => {
     const crscode = req.params.crscode;
 
