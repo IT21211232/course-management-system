@@ -31,5 +31,28 @@ router.route("/").get((req, res) => {
     })
 })
 
+router.route("/update/:crscode").put(async (req, res) => {
+    const crscode = req.params.crscode;
+    const { crsname, description, credit } = req.body;
+
+    try {
+        // Find the menu course by crscode and update it
+        const updatedItem = await Course.findOneAndUpdate(
+            { crscode: crscode },
+            { $set: { crsname, description, credit } },
+            { new: true } // Return the updated document
+        );
+
+        if (updatedItem) {
+            return res.status(200).json({ status: "Item updated", updatedItem });
+        } else {
+            return res.status(404).json({ error: "Course with provided code not found" });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 module.exports = router;
 
