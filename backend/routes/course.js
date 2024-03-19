@@ -22,7 +22,14 @@ router.route("/add").post((req, res) => {
     });
 })
 
-
+router.route("/").get((req, res) => {
+    Course.find().then((courseItems)=>{
+        res.json(courseItems);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send({status: `Cannot fetch course details at the moment. Err: ${err}`});
+    })
+})
 
 module.exports = router;
 
