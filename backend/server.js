@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 require("dotenv").config();
+const cookieParser = require('cookie-parser')
 
 //Routes
 app.get("/", (req, res) => {
@@ -20,6 +21,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
+app.use(cookieParser())
 
 //connecting the database
 const URL = process.env.MONGODB_URL;
@@ -32,6 +34,16 @@ mongoose.connect(URL, {
 const courseRouter = require("./routes/course.js")
 // using the imported route
 app.use("/course", courseRouter);
+
+// Importing and accessing the register.js route file
+const registerRouter = require("./routes/register.js")
+// using the imported route
+app.use("/signup", registerRouter);
+
+// Importing and accessing the login.js route file
+const loginRouter = require("./routes/login.js")
+// using the imported route
+app.use("/signin", loginRouter);
 
 
 //creating the connection
