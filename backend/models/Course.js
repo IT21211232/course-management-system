@@ -18,7 +18,7 @@ const courseSchema = new Schema({
     credit: {
         type : Number,
         required : true
-    }
+    },
 })
 
 const Course = mongoose.model("course", courseSchema) // "Course" is the name of the table
