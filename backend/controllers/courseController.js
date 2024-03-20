@@ -6,6 +6,7 @@ async function addCourse(req, res, next) {
     const crsname = req.body.crsname;
     const description = req.body.description;
     const credit = Number(req.body.credit);
+    const faculty = req.body.faculty;
     
     if(req.user.role === 'admin'){
         try {
