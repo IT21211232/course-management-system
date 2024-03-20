@@ -7,7 +7,7 @@ async function addCourse(req, res, next) {
     const description = req.body.description;
     const credit = Number(req.body.credit);
     const faculty = req.body.faculty;
-    
+    const check = null;
     if(req.user.role === 'admin'){
         try {
             // Check if a course with the same crscode already exists
