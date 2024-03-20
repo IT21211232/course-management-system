@@ -70,6 +70,37 @@ async function updateCourse(req, res) {
     }
 }
 
+async function updateFaculty (req, res, next) {
+    if(req.user.role === 'admin'){
+
+        try {
+            const { crscode } = req.params;
+            const { faculty } = req.body;
+    
+            // Find the course by crscode and update the faculty value
+            const updatedCourse = await Course.findOneAndUpdate(
+                { crscode: crscode },
+                { $set: { faculty: faculty } },
+                { new: true } // Return the updated document
+            );
+    
+            if (updatedCourse) {
+                return res.status(200).json({ status: "Faculty updated successfully", updatedCourse });
+            } else {
+                return res.status(404).json({ error: "Course with provided crscode not found" });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+
+    }
+    else{
+        return res.status(401).json({ error: "You are not authorized to perform this action" });
+    }
+};
+
+
 async function deleteCourse(req, res) {
     const { crscode } = req.params;
 
@@ -88,4 +119,4 @@ async function deleteCourse(req, res) {
     }
 }
 
-module.exports = { addCourse, updateCourse, deleteCourse, getAllCourses };
+module.exports = { addCourse, updateCourse, updateFaculty, deleteCourse, getAllCourses};
