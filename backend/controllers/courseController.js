@@ -1,33 +1,40 @@
 // controllers/courseController.js
 const Course = require('../models/Course');
 
-async function addCourse(req, res) {
+async function addCourse(req, res, next) {
     const crscode = req.body.crscode;
     const crsname = req.body.crsname;
     const description = req.body.description;
     const credit = Number(req.body.credit);
 
-    try {
-        // Check if a course with the same crscode already exists
-        const existingCourse = await Course.findOne({ crscode });
-        if (existingCourse) {
-            return res.status(400).json({ error: "Course with the same crscode already exists" });
+    console.log(req.user.role);
+    if(req.user.role === 'admin'){
+        try {
+            // Check if a course with the same crscode already exists
+            const existingCourse = await Course.findOne({ crscode });
+            if (existingCourse) {
+                return res.status(400).json({ error: "Course with the same crscode already exists" });
+            }
+    
+            // If the course does not exist, create and save the new course
+            const courseItem = new Course({
+                crscode,
+                crsname,
+                description,
+                credit,
+            });
+    
+            await courseItem.save();
+            return res.json({ status: "Course successfully added!" });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ status: "Error with adding course" });
         }
-
-        // If the course does not exist, create and save the new course
-        const courseItem = new Course({
-            crscode,
-            crsname,
-            description,
-            credit,
-        });
-
-        await courseItem.save();
-        return res.json({ status: "Course successfully added!" });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ status: "Error with adding course" });
     }
+    else{
+        return res.status(401).json({ error: "You are not authorized to perform this action" });
+    }
+    
 }
 
 async function getAllCourses(req, res) {
