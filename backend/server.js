@@ -38,7 +38,7 @@ app.use("/course", courseRouter);
 // Importing and accessing the register.js route file
 const registerRouter = require("./routes/register.js")
 // using the imported route
-app.use("/register", registerRouter);
+app.use("/signup", registerRouter);
 
 // Importing and accessing the login.js route file
 const loginRouter = require("./routes/login.js")
