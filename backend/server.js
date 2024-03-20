@@ -45,6 +45,11 @@ const loginRouter = require("./routes/login.js")
 // using the imported route
 app.use("/signin", loginRouter);
 
+// Importing and accessing the studentcourseenroll.js route file
+const courseEnrollmentRouter = require("./routes/studentcourseenroll.js")
+// using the imported route
+app.use("/enroll", courseEnrollmentRouter);
+
 
 //creating the connection
 const connection = mongoose.connection;
