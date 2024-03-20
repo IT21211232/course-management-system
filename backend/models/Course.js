@@ -19,6 +19,10 @@ const courseSchema = new Schema({
         type : Number,
         required : true
     },
+    faculty: {
+        type: String,
+        default: null
+    }
 })
 
 const Course = mongoose.model("course", courseSchema) // "Course" is the name of the table
