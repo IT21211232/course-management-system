@@ -10,6 +10,6 @@ const timetableSchema = new Schema({
     endTime: { type: Date, required: true }
 })
 
-const Timetable = mongoose.model("timetable", timetableSchema) 
+const Timetable = mongoose.model("timetable", timetableSchema)
 
 module.exports = Timetable;
