@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const {addClass} = require('../controllers/timetableController');
+const {addClass, updateClass} = require('../controllers/timetableController');
+const {authUser} = require('../utils/authUser');
 
-router.post('/add', addClass);
+router.post('/add', authUser, addClass);
+router.put('/update/:classID', authUser, updateClass);
 
 module.exports = router;
