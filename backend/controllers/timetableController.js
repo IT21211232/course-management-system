@@ -1,5 +1,39 @@
 const Timetable = require('../models/Timetable');
 const Course = require('../models/Course')
+const StudentCourse = require('../models/StudentCourse');
+
+async function getClass(req, res, next) {
+    let username = req.user.username;
+    if(req.user.role == 'admin' || req.user.role == 'faculty'){
+        try {
+            const timetableItems = await Timetable.find();
+            return res.status(200).json(timetableItems);
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ status: `Cannot fetch timetable at the moment. Err: ${err}` });
+        }
+    }
+    else if(req.user.role == 'student'){
+        try {
+            let studentCourse = await StudentCourse.findOne({ studentID: username });
+            let coursesArray = studentCourse.coursesEnrolled;
+
+            if (coursesArray && coursesArray.length > 0) {
+                const timetableEntries = await Timetable.find({ course: { $in: coursesArray } });
+                res.status(200).json(timetableEntries);
+            } else {
+                res.status(404).json({state: 'You have no lectures in the timetable'});
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ status: `Cannot fetch timetable at the moment. Err: ${err}` });
+        }
+    }
+    else{
+        return res.status(400).json({ status: `Please login to continue` });
+    }
+    
+}
 
 async function addClass(req, res, next){
     if(req.user.role === 'faculty'){
@@ -184,4 +218,4 @@ async function deleteClass(req, res, next) {
     }
 }
 
-module.exports = { addClass, updateClass, deleteClass }
+module.exports = { getClass ,addClass, updateClass, deleteClass }
