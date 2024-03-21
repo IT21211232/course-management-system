@@ -87,7 +87,7 @@ async function updateClass(req, res, next){
             prevEndTime = classDetails.endTime;
         }
         else{
-            return res(404).json({ error: "There is no class with the passed ID" });
+            return res.status(404).json({ error: "There is no class with the passed ID" });
         }
         try {
             const { date, location, course, startTime, endTime } = req.body;
@@ -162,4 +162,26 @@ async function updateClass(req, res, next){
 
 }
 
-module.exports = {addClass, updateClass}
+async function deleteClass(req, res, next) {
+    if(req.user.role === 'faculty'){
+        const { classID } = req.params;
+        try {
+            // Find the menu item by name and delete it
+            const deletedItem = await Timetable.findOneAndDelete({ _id: classID });
+
+            if (deletedItem) {
+                return res.status(200).json({ status: "Item deleted", deletedItem });
+            } else {
+                return res.status(404).json({ error: "Course with the entered code not found" });
+            }
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+    }
+    else{
+        return res.status(401).json({ error: "You are not authorized to perform this action" });
+    }
+}
+
+module.exports = { addClass, updateClass, deleteClass }
