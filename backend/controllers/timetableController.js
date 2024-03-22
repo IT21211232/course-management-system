@@ -1,6 +1,7 @@
 const Timetable = require('../models/Timetable');
 const Course = require('../models/Course')
 const StudentCourse = require('../models/StudentCourse');
+const Notification = require('../models/Notification');
 
 async function getClass(req, res, next) {
     let username = req.user.username;
@@ -77,6 +78,14 @@ async function addClass(req, res, next){
                         endTime
                     });
                     await newTimetableEntry.save();
+
+                    const newNotification = new Notification({
+                        course,
+                        type: 'created',
+                        addedTime: new Date()
+                    })
+
+                    await newNotification.save();
     
                     res.status(201).json({ message: 'Timetable entry added successfully.' });
                 }
@@ -164,9 +173,18 @@ async function updateClass(req, res, next){
                             startTime,
                             endTime
                         }, { new: true }); // Set { new: true } to return the updated document
+                        
                 
                         if (updatedEntry) {
                             // If the timetable entry is successfully updated, send a success response
+                            const newNotification = new Notification({
+                                course,
+                                type: 'updated',
+                                addedTime: new Date()
+                            })
+        
+                            await newNotification.save();
+                            
                             res.status(200).json({ message: 'Timetable entry updated successfully.', updatedEntry });
                         } else {
                             // If no timetable entry is found for the provided _id, send a not found response
@@ -199,12 +217,31 @@ async function updateClass(req, res, next){
 async function deleteClass(req, res, next) {
     if(req.user.role === 'faculty'){
         const { classID } = req.params;
+        let course;
         try {
+            const classDetails = await Timetable.findOne({ _id:classID });
+            if(classDetails){
+                course = classDetails.course;
+            }
+            else{
+                return res.status(404).json({ error: "Course with the entered code not found" });
+            }
+
             // Find the menu item by name and delete it
             const deletedItem = await Timetable.findOneAndDelete({ _id: classID });
 
             if (deletedItem) {
+                const newNotification = new Notification({
+                    course,
+                    type: 'deleted',
+                    addedTime: new Date()
+                })
+
+                await newNotification.save();
+
                 return res.status(200).json({ status: "Item deleted", deletedItem });
+
+
             } else {
                 return res.status(404).json({ error: "Course with the entered code not found" });
             }
