@@ -55,6 +55,11 @@ const timetableRouter = require("./routes/timetable.js")
 // using the imported route
 app.use("/class", timetableRouter);
 
+// Importing and accessing the notification.js route file
+const notificationsRouter = require("./routes/notification.js")
+// using the imported route
+app.use("/notifications", notificationsRouter);
+
 
 //creating the connection
 const connection = mongoose.connection;
