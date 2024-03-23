@@ -11,6 +11,8 @@ async function addCourseToStudent(req, res, next){
         let student = await StudentCourse.findOne({ studentID });
         let course = await Course.findOne({ crscode });
 
+        let courseAdded = await CourseStudent.findOne({ crscode });
+
         if(course){
             if (student) {
                 // Check if the student is already enrolled in the course
@@ -23,6 +25,21 @@ async function addCourseToStudent(req, res, next){
                         { studentID: studentID },
                         { $push: { coursesEnrolled: crscode } }
                     );
+
+                    /*Code responsible in adding the data to the course-students collection.*/
+                    if(courseAdded){
+                        await CourseStudent.updateOne(
+                            { crscode: crscode },
+                            { $push: { studentsEnrolled: studentID } }
+                        );
+                    }
+                    else{
+                        course = new CourseStudent({
+                            crscode,
+                            studentsEnrolled: [studentID]
+                        });
+                        await course.save();
+                    }
                     return res.status(200).json({ message: "Successfully enrolled to module" });
                 }
             } else {
@@ -32,9 +49,25 @@ async function addCourseToStudent(req, res, next){
                     coursesEnrolled: [crscode]
                 });
                 await student.save();
-                console.log('testing');
+
+                /*Code responsible in adding the data to the course-students collection.*/
+                if(courseAdded){
+                    await CourseStudent.updateOne(
+                        { crscode: crscode },
+                        { $push: { studentsEnrolled: studentID } }
+                    );
+                }
+                else{
+                    course = new CourseStudent({
+                        crscode,
+                        studentsEnrolled: [studentID]
+                    });
+                    await course.save();
+                }
                 return res.status(200).json({ message: "Successfully enrolled to module" });
             }
+
+
         }
         else{
             return res.status(401).json({ error: "There is no course available with the entered course ID" });
