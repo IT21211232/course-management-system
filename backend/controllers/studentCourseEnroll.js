@@ -32,6 +32,7 @@ async function addCourseToStudent(req, res, next){
                     coursesEnrolled: [crscode]
                 });
                 await student.save();
+                console.log('testing');
                 return res.status(200).json({ message: "Successfully enrolled to module" });
             }
         }
