@@ -60,6 +60,11 @@ const notificationsRouter = require("./routes/notification.js")
 // using the imported route
 app.use("/notifications", notificationsRouter);
 
+// Importing and accessing the notification.js route file
+const resourceRouter = require("./routes/resource.js")
+// using the imported route
+app.use("/resource", resourceRouter);
+
 
 //creating the connection
 const connection = mongoose.connection;
