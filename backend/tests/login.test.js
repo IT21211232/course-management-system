@@ -1,3 +1,4 @@
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { login } = require('../controllers/loginController');
@@ -67,43 +68,44 @@ describe('Login Controller', () => {
 //     expect(res.status).toHaveBeenCalledWith(200);
 //     expect(res.json).toHaveBeenCalledWith({ username: 'it21211232', role: 'student', name: 'Student01' });
 //   });
-    /*
-    it('should log in successfully and respond with user data', async () => {
-        const req = { body: { username: 'it21211232', password: 'Tester432' } };
-        const res = { 
-        status: jest.fn().mockReturnThis(), 
-        json: jest.fn(), 
-        cookie: jest.fn() 
-        };
-        const next = jest.fn();
-        
-        const mockUser = { 
-        _doc: { username: 'it21211232', role: 'student', name: 'Student01' } 
-        };
-        
-        // Mocking User.findOne
-        User.findOne.mockResolvedValue(mockUser);
-        
-        // Mocking bcrypt.compareSync
-        bcrypt.compareSync.mockReturnValue(true);
-        
-        // Mocking jwt.sign
-        jwt.sign.mockReturnValue('mockedToken');
     
-        await login(req, res, next);
+
+    // it('should log in successfully and respond with user data', async () => {
+    //     const req = { body: { username: 'it21211232', password: 'Tester432' } };
+    //     const res = { 
+    //     status: jest.fn().mockReturnThis(), 
+    //     json: jest.fn(), 
+    //     cookie: jest.fn() 
+    //     };
+    //     const next = jest.fn();
+        
+    //     const mockUser = { 
+    //     _doc: { username: 'it21211232', role: 'student', name: 'Student01' } 
+    //     };
+        
+    //     // Mocking User.findOne
+    //     User.findOne.mockResolvedValue(mockUser);
+        
+    //     // Mocking bcrypt.compareSync
+    //     bcrypt.compareSync.mockReturnValue(true);
+        
+    //     // Mocking jwt.sign
+    //     jwt.sign.mockReturnValue('mockedToken');
     
-        // Expectations
-        expect(User.findOne).toHaveBeenCalledWith({ username: 'it21211232' });
-        expect(bcrypt.compareSync).toHaveBeenCalledWith('Tester432', mockUser._doc.password);
-        expect(jwt.sign).toHaveBeenCalledWith(
-        { username: 'it21211232', role: 'student' },
-        process.env.JWT_SECRET
-        );
-        expect(res.cookie).toHaveBeenCalledWith('session_data', 'mockedToken', { httpOnly: true });
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith(mockUser._doc);
-    });
-    */
+    //     await login(req, res, next);
+    
+    //     // Expectations
+    //     expect(User.findOne).toHaveBeenCalledWith({ username: 'it21211232' });
+    //     expect(bcrypt.compareSync).toHaveBeenCalledWith('Tester432', mockUser._doc.password);
+    //     expect(jwt.sign).toHaveBeenCalledWith(
+    //     { username: 'it21211232', role: 'student' },
+    //     process.env.JWT_SECRET
+    //     );
+    //     expect(res.cookie).toHaveBeenCalledWith('session_data', 'mockedToken', { httpOnly: true });
+    //     expect(res.status).toHaveBeenCalledWith(200);
+    //     expect(res.json).toHaveBeenCalledWith(mockUser._doc);
+    // });
+    
 
   it('should handle errors thrown during execution', async () => {
     req.body = { username: 'it21211232', password: 'password' };
