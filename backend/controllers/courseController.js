@@ -42,7 +42,7 @@ async function getAllCourses(req, res) {
         const courseItems = await Course.find();
         res.json(courseItems);
     } catch (err) {
-        console.error(err);
+        console.log(err);
         res.status(500).json({ status: `Cannot fetch course details at the moment. Err: ${err}` });
     }
 }
@@ -65,7 +65,7 @@ async function updateCourse(req, res) {
             return res.status(404).json({ error: "Course with provided code not found" });
         }
     } catch (err) {
-        console.error(err);
+        console.log(err);
         return res.status(500).json({ error: "Internal server error" });
     }
 }
@@ -90,7 +90,7 @@ async function updateFaculty (req, res, next) {
                 return res.status(404).json({ error: "Course with provided crscode not found" });
             }
         } catch (error) {
-            console.error(error);
+            console.log(error);
             return res.status(500).json({ error: "Internal server error" });
         }
 
@@ -114,7 +114,7 @@ async function deleteCourse(req, res) {
             return res.status(404).json({ error: "Course with the entered code not found" });
         }
     } catch (err) {
-        console.error(err);
+        console.log(err);
         return res.status(500).json({ error: "Internal server error" });
     }
 }
