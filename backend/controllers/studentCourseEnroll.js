@@ -3,6 +3,21 @@ const CourseStudent = require('../models/CourseStudent');
 const StudentCourse = require('../models/StudentCourse');
 const Course = require('../models/Course')
 
+async function getEnrolledStudents(req, res, next){
+    if(req.user.role === 'admin'){
+        try {
+            const allEnrollments = await CourseStudent.find();
+            return res.status(200).json(allEnrollments);
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ status: `Cannot fetch enrolled courses. Err: ${err}` });
+        }
+    }
+    else{
+        return res.status(401).json({ error: "You are not authorized to perform this action." });
+    }
+}
+
 async function addCourseToStudent(req, res, next){
     const crscode = req.body.crscode;
     const studentID = req.user.username;
@@ -147,4 +162,4 @@ async function adminUnenrollStudent(req, res, next){
     }
 }
 
-module.exports = { enrollUnenrollMe, unenrollMe, adminUnenrollStudent };
+module.exports = { getEnrolledStudents, enrollUnenrollMe, unenrollMe, adminUnenrollStudent };
