@@ -50,24 +50,39 @@ async function getAllCourses(req, res) {
 async function updateCourse(req, res) {
     const { crscode } = req.params;
     const { crsname, description, credit } = req.body;
-
-    try {
-        // Find the menu course by crscode and update it
-        const updatedItem = await Course.findOneAndUpdate(
-            { crscode },
-            { $set: { crsname, description, credit } },
-            { new: true } // Return the updated document
-        );
-
-        if (updatedItem) {
-            return res.status(200).json({ status: "Item updated", updatedItem });
-        } else {
-            return res.status(404).json({ error: "Course with provided code not found" });
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({ error: "Internal server error" });
+    const facultyDetails = await Course.findOne({crscode});
+    let facultyName;
+    if(facultyDetails){
+        facultyName = facultyDetails.faculty;
     }
+    else{
+        return res.status(404).json({ error: "Course with provided code not found" });
+    }
+
+    if(req.user.role === 'faculty' && req.user.username === facultyName){
+        try {
+            // Find the menu course by crscode and update it
+            const updatedItem = await Course.findOneAndUpdate(
+                { crscode },
+                { $set: { crsname, description, credit } },
+                { new: true } // Return the updated document
+            );
+    
+            if (updatedItem) {
+                return res.status(200).json({ status: "Item updated", updatedItem });
+            } else {
+                return res.status(404).json({ error: "Course with provided code not found" });
+            }
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+    }
+    else{
+        return res.status(401).json({ error: "You are not authorized to perform this action" });
+    }
+
+    
 }
 
 async function updateFaculty (req, res, next) {
