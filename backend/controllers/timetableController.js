@@ -17,14 +17,22 @@ async function getClass(req, res, next) {
     else if(req.user.role == 'student'){
         try {
             let studentCourse = await StudentCourse.findOne({ studentID: username });
-            let coursesArray = studentCourse.coursesEnrolled;
+            let coursesArray;
 
-            if (coursesArray && coursesArray.length > 0) {
-                const timetableEntries = await Timetable.find({ course: { $in: coursesArray } });
-                res.status(200).json(timetableEntries);
-            } else {
-                res.status(404).json({state: 'You have no lectures in the timetable'});
+            if(studentCourse){
+                coursesArray = studentCourse.coursesEnrolled;
+                if (coursesArray && coursesArray.length > 0) {
+                    const timetableEntries = await Timetable.find({ course: { $in: coursesArray } });
+                    res.status(200).json(timetableEntries);
+                } else {
+                    res.status(404).json({state: 'You have no lectures in the timetable'});
+                }
             }
+            else{
+                res.status(404).json({state: 'You have not enrolled to any course'});
+            }
+
+            
         } catch (err) {
             console.error(err);
             res.status(500).json({ status: `Cannot fetch timetable at the moment. Err: ${err}` });
