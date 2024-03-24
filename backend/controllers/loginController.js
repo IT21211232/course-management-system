@@ -37,26 +37,6 @@ async function login(req, res, next) {
         console.log(error);
         next(error)
     }
-    // try {
-    //     // Check if user exists
-    //     const user = await User.findOne({ username });
-    //     if (!user) {
-    //         return res.status(404).json({ error: "User not found" });
-    //     }
-
-    //     // Check if password is correct
-    //     const validPassword = await bcrypt.compare(password, user.password);
-    //     if (!validPassword) {
-    //         return res.status(401).json({ error: "Invalid password" });
-    //     }
-
-    //     // Generate JWT token
-    //     const token = jwt.sign({ username: user.username, role: user.role }, process.env.JWT_SECRET);
-    //     res.json({ token });
-    // } catch (err) {
-    //     console.error(err);
-    //     res.status(500).json({ error: "Internal server error" });
-    // }
 }
 
 module.exports = { login };
