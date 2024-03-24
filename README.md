@@ -9,3 +9,8 @@
 5. Install dependencies using `npm install`.
 6. Configure environment variables by creating a `.env` file.
 7. Start the server using `npm run dev`.
+
+# Running unit tests
+
+1. Navigate to the backend folder using the command `cd backend`.
+2. Use the command `npx jest` to run the unit tests.
