@@ -172,7 +172,7 @@ async function updateClass(req, res, next){
                             course,
                             startTime,
                             endTime
-                        }, { new: true }); // Set { new: true } to return the updated document
+                        }, { new: true }); 
                         
                 
                         if (updatedEntry) {
@@ -187,7 +187,6 @@ async function updateClass(req, res, next){
                             
                             res.status(200).json({ message: 'Timetable entry updated successfully.', updatedEntry });
                         } else {
-                            // If no timetable entry is found for the provided _id, send a not found response
                             res.status(404).json({ error: 'Timetable entry not found.' });
                         }
                     }

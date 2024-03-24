@@ -45,7 +45,5 @@ describe('Notification Controller', () => {
             expect(res.status).toHaveBeenCalledWith(200);
             expect(res.json).toHaveBeenCalledWith(studentNotifs);
         });
-
-        // Add more test cases for different scenarios as needed
     });
 });

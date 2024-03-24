@@ -39,7 +39,5 @@ describe('Resource Controller', () => {
             expect(res.status).toHaveBeenCalledWith(401);
             expect(res.json).toHaveBeenCalledWith({ error: 'You are not authorized to add resources' });
         });
-
-        // Add more test cases for different scenarios as needed
     });
 });

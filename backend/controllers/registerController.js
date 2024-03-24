@@ -11,7 +11,7 @@ async function registerUser(req, res) {
             return res.status(400).json({ error: "Username already exists" });
         }
 
-        // Hash the password
+        // Hashing the password for better security
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create a new user

@@ -13,6 +13,6 @@ const resourceSchema = new Schema({
     },
 })
 
-const Resource = mongoose.model("resource", resourceSchema) // "Course" is the name of the table
+const Resource = mongoose.model("resource", resourceSchema) 
 
 module.exports = Resource;
