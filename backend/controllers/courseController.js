@@ -1,6 +1,7 @@
 // controllers/courseController.js
 const Course = require('../models/Course');
 
+// Adding a new course - this function can only be performed by an admin
 async function addCourse(req, res, next) {
     const crscode = req.body.crscode;
     const crsname = req.body.crsname;
@@ -10,7 +11,7 @@ async function addCourse(req, res, next) {
     const check = null;
     if(req.user.role === 'admin'){
         try {
-            // Check if a course with the same crscode already exists
+            // Check if a course with the same crscode alrady exists
             const existingCourse = await Course.findOne({ crscode });
             if (existingCourse) {
                 return res.status(400).json({ error: "Course with the same crscode already exists" });
@@ -37,6 +38,7 @@ async function addCourse(req, res, next) {
     
 }
 
+/*Function for getting all the courses available*/
 async function getAllCourses(req, res) {
     try {
         const courseItems = await Course.find();
@@ -47,6 +49,7 @@ async function getAllCourses(req, res) {
     }
 }
 
+// this function can be performed by an admin or a faculty member from the respective faclty
 async function updateCourse(req, res) {
     const { crscode } = req.params;
     const { crsname, description, credit } = req.body;
@@ -85,6 +88,7 @@ async function updateCourse(req, res) {
     
 }
 
+// Once the course is created, the admin can allocate faculties for the courses
 async function updateFaculty (req, res, next) {
     if(req.user.role === 'admin'){
 
@@ -115,7 +119,7 @@ async function updateFaculty (req, res, next) {
     }
 };
 
-
+// the function below can only be performed by an admin or the respective faculty
 async function deleteCourse(req, res) {
     const { crscode } = req.params;
     const facultyDetails = await Course.findOne({crscode});

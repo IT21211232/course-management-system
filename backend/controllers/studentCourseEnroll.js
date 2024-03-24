@@ -35,7 +35,7 @@ async function addCourseToStudent(req, res, next){
                     return res.status(401).json({ error: "You are already enrolled in this course" });
                 } else {
                     // Add the course to the enrolled courses array
-                    // student.coursesEnrolled.push(crscode);
+                    // student.coursesEnrolled.push(crscode); -- not working
                     await StudentCourse.updateOne(
                         { studentID: studentID },
                         { $push: { coursesEnrolled: crscode } }
