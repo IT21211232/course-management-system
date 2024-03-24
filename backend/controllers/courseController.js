@@ -59,7 +59,7 @@ async function updateCourse(req, res) {
         return res.status(404).json({ error: "Course with provided code not found" });
     }
 
-    if(req.user.role === 'faculty' && req.user.username === facultyName){
+    if((req.user.role === 'faculty' && req.user.username === facultyName) || req.user.role === 'admin'){
         try {
             // Find the menu course by crscode and update it
             const updatedItem = await Course.findOneAndUpdate(
@@ -118,19 +118,32 @@ async function updateFaculty (req, res, next) {
 
 async function deleteCourse(req, res) {
     const { crscode } = req.params;
+    const facultyDetails = await Course.findOne({crscode});
+    let facultyName;
+    if(facultyDetails){
+        facultyName = facultyDetails.faculty;
+    }
+    else{
+        return res.status(404).json({ error: "Course with provided code not found" });
+    }
 
-    try {
-        // Find the menu item by name and delete it
-        const deletedItem = await Course.findOneAndDelete({ crscode });
-
-        if (deletedItem) {
-            return res.status(200).json({ status: "Item deleted", deletedItem });
-        } else {
-            return res.status(404).json({ error: "Course with the entered code not found" });
+    if((req.user.role === 'faculty' && req.user.username === facultyName) || req.user.role === 'admin'){
+        try {
+            // Find the menu item by name and delete it
+            const deletedItem = await Course.findOneAndDelete({ crscode });
+    
+            if (deletedItem) {
+                return res.status(200).json({ status: "Item deleted", deletedItem });
+            } else {
+                return res.status(404).json({ error: "Course with the entered code not found" });
+            }
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({ error: "Internal server error" });
         }
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({ error: "Internal server error" });
+    }
+    else{
+        return res.status(401).json({ error: "You are not authorized to perform this action" });
     }
 }
 
