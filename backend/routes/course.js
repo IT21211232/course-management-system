@@ -4,10 +4,10 @@ const { addCourse, updateCourse, getAllCourses, deleteCourse, updateFaculty } = 
 const { authUser } = require('../utils/authUser');
 
 router.post('/add', authUser, addCourse);
-router.put('/update/:crscode', updateCourse);
+router.put('/update/:crscode', authUser, updateCourse);
 router.put('/update/faculty/:crscode', authUser,updateFaculty);
-router.get('/', getAllCourses);
-router.delete('/delete/:crscode', deleteCourse);
+router.get('/', authUser, getAllCourses);
+router.delete('/delete/:crscode', authUser, deleteCourse);
 
 module.exports = router;
 
