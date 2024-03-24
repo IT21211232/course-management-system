@@ -25,14 +25,15 @@ describe('Login Controller', () => {
   });
 
   it('should respond with an error if username or password is missing', async () => {
-    req.body = {}; // Empty body
+    // the body is passed empty to get equivalent results
+    req.body = {};
 
     await login(req, res, next);
 
     expect(next).toHaveBeenCalledWith(errorHandler(400, 'Make sure all the fields are filled'));
   });
 
-  it('an error message has to be returned if the user is not found', async () => {
+  it('If the user is not found an error message needs to be returned', async () => {
     req.body = { username: 'ip21211232', password: 'Tester432' };
     User.findOne.mockResolvedValue(null);
 
@@ -41,7 +42,7 @@ describe('Login Controller', () => {
     expect(next).toHaveBeenCalledWith(errorHandler(404, 'User not found'));
   });
 
-  it('should respond with an error if password is invalid', async () => {
+  it('Fir invalid passwords it needs to respond with an error message', async () => {
     req.body = { username: 'it21211232', password: 'password' };
     User.findOne.mockResolvedValue({ password: 'hashedPassword' });
     bcrypt.compareSync.mockReturnValue(false);
